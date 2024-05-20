@@ -1,0 +1,27 @@
+{
+  "name": "awas-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeeviSav/AWAS-Site.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeeviSav/AWAS-Site/issues"
+  },
+  "homepage": "https://github.com/LeeviSav/AWAS-Site#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "node": "^22.2.0",
+    "nodemon": "^3.1.0",
+    "sqlite3": "^5.1.7"
+  }
+}
