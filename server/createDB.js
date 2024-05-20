@@ -37,14 +37,22 @@ db.serialize(() => {
         } else {
             console.log('Users table created or already exists');
 
-            const username = 'SLeevi';
+            const username = 'admin';
             const password = 'Metropolia123';
-            db.close((err) => {
+            db.run(`INSERT INTO users (username, password) VALUES (?, ?)`, [username, password], (err) => {
                 if (err) {
-                    console.error('Error closing the database', err);
+                    console.error('Could not insert user', err);
                 } else {
-                    console.log('Database connection closed');
+                    console.log('Sample user inserted');
                 }
+                // Close the database connection after insertion
+                db.close((err) => {
+                    if (err) {
+                        console.error('Error closing the database', err);
+                    } else {
+                        console.log('Database connection closed');
+                    }
+                });
             });
         }
     });

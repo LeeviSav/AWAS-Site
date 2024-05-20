@@ -81,8 +81,8 @@ app.post('/login', (req, res) => {
 
 // Handle posting a new message
 app.post('/add_message', (req, res) => {
-    const { username, message } = req.body;
-
+    const { message } = req.body;
+    const username = req.cookies.user.split('-')[0];
     const query = `INSERT INTO messages (username, message) VALUES (?, ?)`;
     db.run(query, [username, message], (err) => {
         if (err) {
@@ -95,11 +95,16 @@ app.post('/add_message', (req, res) => {
 
 // Handle loading all messages
 app.get('/load_messages', (req, res) => {
-    const query = `SELECT username, message, timestamp FROM messages ORDER BY timestamp DESC`;
+    const query = `
+        SELECT messages.message, messages.timestamp, users.username
+        FROM messages
+        INNER JOIN users ON messages.username = users.username
+        ORDER BY messages.timestamp DESC
+    `;
 
     db.all(query, [], (err, rows) => {
         if (err) {
-            console.error(err);
+            console.error('Error retrieving messages:', err);
             return res.status(500).json({ message: 'Internal server error' });
         }
         res.status(200).json(rows);

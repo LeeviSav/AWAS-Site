@@ -27,13 +27,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             loadMessages();
-
+    
             document.getElementById('comment-form').addEventListener('submit', function (e) {
                 e.preventDefault();
                 addMessage();
             });
         });
-
+    
         function loadMessages() {
             fetch('/load_messages')
                 .then(response => response.json())
@@ -47,7 +47,7 @@
                     });
                 });
         }
-
+    
         function addMessage() {
             const commentBox = document.getElementById('comment-box');
             const message = commentBox.value;
