@@ -57,16 +57,22 @@ function checkCookie(req, res, next) {
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    const query = `SELECT password FROM users WHERE username = '${username}' AND password = '${password}'`;
+    const userQuery = `SELECT password FROM users WHERE username = ?`;
 
-    db.get(query, (err, row) => {
+    db.get(userQuery, [username], (err, row) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Internal server error' });
         }
         if (!row) {
-            return res.status(401).json({ message: 'Username or password is incorrect' });
+            // Username does not exist
+            return res.status(401).json({ message: 'Invalid username or password' });
         }
+        if (row.password !== password) {
+            // Password is incorrect
+            return res.status(401).json({ message: 'Invalid password' });
+        }
+
         const date = new Date();
         const dd = String(date.getDate()).padStart(2, '0');
         const mm = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
