@@ -57,22 +57,21 @@ function checkCookie(req, res, next) {
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    const userQuery = `SELECT password FROM users WHERE username = ?`;
-
-    db.get(userQuery, [username], (err, row) => {
+    const query = `SELECT username, password FROM users WHERE username = '${username}'`;
+    db.get(query, (err, row) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Internal server error' });
         }
-        if (!row) {
-            // Username does not exist
+        else if (!row) {
+            // No user found
             return res.status(401).json({ message: 'Invalid username or password' });
         }
-        if (row.password !== password) {
-            // Password is incorrect
-            return res.status(401).json({ message: 'Invalid password' });
+        else if (row.password !== password) {
+            // Incorrect password
+            res.status(401).json({ message: 'Invalid password', data: row });
         }
-
+        else {
         const date = new Date();
         const dd = String(date.getDate()).padStart(2, '0');
         const mm = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
@@ -82,8 +81,12 @@ app.post('/login', (req, res) => {
         // Set the cookie
         res.cookie('user', `${username}-${dateString}`, { httpOnly: true });
         res.status(200).json({ message: 'Login successful' });
+        }
+        
     });
 });
+
+
 
 // Handle posting a new message
 app.post('/add_message', (req, res) => {
